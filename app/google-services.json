@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "966970890362",
+    "firebase_url": "https://forum-1b336.firebaseio.com",
+    "project_id": "forum-1b336",
+    "storage_bucket": "forum-1b336.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966970890362:android:cd32d9a25a172d03",
+        "android_client_info": {
+          "package_name": "com.example.herik21.forum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966970890362-kg8lllij7222la866bv7t78800nnd8da.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.herik21.forum",
+            "certificate_hash": "62C15CABA2CED383A1B932BBF8F1E7C7CB5C05C3"
+          }
+        },
+        {
+          "client_id": "966970890362-22ob560ssbt6bs78teifkkjqri5nuafk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCniaP6VSGJQrhseKB0JLUATmBPr4VLdT4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966970890362-22ob560ssbt6bs78teifkkjqri5nuafk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
