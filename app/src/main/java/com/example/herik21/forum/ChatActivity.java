@@ -72,7 +72,6 @@ public class ChatActivity extends AppCompatActivity {
                 R.layout.message,
                 MessageViewHolder.class,
                 messageRef ){        //mFirebaseDatabaseReference.child(MESSAGES_CHILD)) {
-
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
                                               Message newMessage, int position) {
