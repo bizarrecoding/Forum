@@ -64,7 +64,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        Query messageRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).orderByChild("id").equalTo(mThreadID);
+        Query messageRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).orderByChild("threadId").equalTo(mThreadID);
 
         Log.d("MSGs","query: id equal to"+mThreadID);
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(
