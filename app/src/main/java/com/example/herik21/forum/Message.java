@@ -5,19 +5,30 @@ package com.example.herik21.forum;
  */
 public class Message {
 
-    public int id;
-    public String content;
-    public String user;
-    public String timestamp;
+    private int threadId;
+    private String content;
+    private String user;
+    private String timestamp;
+    private String photoUrl;
 
     public Message(){}
 
-    public Message(int id, String content, String user, String timestamp) {
-        this.id = id;
+    public Message(int id, String content, String user, String timestamp, String photoUrl) {
+        this.threadId = id;
         this.content = content;
         this.user = user;
         this.timestamp = timestamp;
+        this.photoUrl = photoUrl;
     }
+
+    public int getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(int threadId) {
+        this.threadId = threadId;
+    }
+
     public String getContent() {
         return content;
     }
@@ -32,5 +43,21 @@ public class Message {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

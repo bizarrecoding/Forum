@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -43,6 +44,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseUser mFirebaseUser;
     private GoogleApiClient mGoogleApiClient;
     private String mUsername = "Anonymous";
+    private String mPhotoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             Snackbar.make(findViewById(R.id.textView4), "Welcome, "+mUsername, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             if (mFirebaseUser.getPhotoUrl() != null) {
-                //mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
         }
 
@@ -92,8 +94,13 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("ForumActivity ", "Click on: " + id);
+                Log.d("ForumActivity th ", "Click on: " + position);
                 Intent i = new Intent(ForumActivity.this, ChatActivity.class);
+                i.putExtra("user",mUsername);
+                i.putExtra("profilepic",mPhotoUrl);
+                i.putExtra("title",((TextView)view.findViewById(R.id.tvThreadtitle)).getText().toString());
+                //TODO: put the true id of the thread
+                i.putExtra("threadId",""+id);
                 startActivity(i);
             }
         });

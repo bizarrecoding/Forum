@@ -49,9 +49,9 @@ public class MessageAdapter extends BaseAdapter {
             LayoutInflater linf = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = linf.inflate(R.layout.message,null);
         }
-        ((TextView)view.findViewById(R.id.mUser)).setText(getItem(i).user);
-        ((TextView)view.findViewById(R.id.mTime)).setText(getItem(i).timestamp);
-        ((TextView)view.findViewById(R.id.mContent)).setText(getItem(i).content);
+        //((TextView)view.findViewById(R.id.mUser)).setText(getItem(i).getUser);
+        //((TextView)view.findViewById(R.id.mTime)).setText(getItem(i).getTimestamp);
+        //((TextView)view.findViewById(R.id.mContent)).setText(getItem(i).getContent);
         return view;
     }
 }
