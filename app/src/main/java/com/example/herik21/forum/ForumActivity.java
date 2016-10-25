@@ -36,8 +36,6 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String TWITTER_KEY = "BFUMc1FPk7r0nDDz0uRpTz8Ad";
     private static final String TWITTER_SECRET = "BSlqtAYlMPToweucA2c6wT5q367OyH31FI9nl82z0e6oXFTll3";
 
-
-
     ThreadAdapter threadAdapter;
     private ListView lv;
     // Firebase instance variables
