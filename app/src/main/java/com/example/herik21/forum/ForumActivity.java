@@ -112,7 +112,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //create new thread
+                //create new thread view
                 Intent i = new Intent(ForumActivity.this, NewThreadActivity.class);
                 startActivity(i);
             }
