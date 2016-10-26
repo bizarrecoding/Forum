@@ -95,8 +95,12 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                 openThread("Main thread",-1);
             }
         });
-        ((TextView)mainThreadView.findViewById(R.id.title)).setText("General Thread Discussion");
-        ((TextView)mainThreadView.findViewById(R.id.desc)).setText("Description");
+        try {
+            ((TextView) mainThreadView.findViewById(R.id.title)).setText("General Thread Discussion");
+            ((TextView) mainThreadView.findViewById(R.id.desc)).setText("Description");
+        }catch (Exception e){
+            
+        }
         threadAdapter = new ThreadAdapter(this, values);
         lv.setAdapter(threadAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

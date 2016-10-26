@@ -38,8 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChatActivity"
-            android:screenOrientation="portrait"/>
+            android:name=".ChatActivity" />
         <activity android:name=".NewThreadActivity"/>
         <meta-data
             android:name="io.fabric.ApiKey"

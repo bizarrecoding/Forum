@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Grinddit</string>
+    <string name="app_name">Greendit</string>
 
     <!-- Strings related to login -->
     <string name="welcome_msg">Welcome!</string>

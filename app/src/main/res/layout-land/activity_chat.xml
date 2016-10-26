@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.herik21.forum.ChatActivity">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:layout_constraintTop_creator="1"
@@ -24,6 +24,10 @@
         android:id="@+id/messages"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         android:layout_marginBottom="8dp" />
+
+    <!--android.support.v7.widget.RecyclerView
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp" /-->
 
     <android.support.constraint.ConstraintLayout
         android:orientation="horizontal"
