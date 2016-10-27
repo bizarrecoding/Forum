@@ -14,12 +14,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -51,6 +54,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_forum);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -65,6 +69,11 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             return;
         } else {
             mUsername = mFirebaseUser.getDisplayName();
+            getSupportActionBar().setTitle(mUsername);
+            ImageView userprofile = (ImageView) findViewById(R.id.usericon);
+            Glide.with(ForumActivity.this)
+                    .load(mFirebaseUser.getPhotoUrl())
+                    .into(userprofile);
             Snackbar.make(findViewById(R.id.textView4), "Welcome, "+mUsername, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             if (mFirebaseUser.getPhotoUrl() != null) {
@@ -96,13 +105,22 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
         try {
-            ((TextView) mainThreadView.findViewById(R.id.title)).setText("General Thread Discussion");
+            ((TextView) mainThreadView.findViewById(R.id.title)).setText("Greendit Discussion");
             ((TextView) mainThreadView.findViewById(R.id.desc)).setText("Description");
         }catch (Exception e){
             
         }
         threadAdapter = new ThreadAdapter(this, values);
         lv.setAdapter(threadAdapter);
+        lv.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -133,6 +151,9 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mUsername = "Anonymous";
                 startActivity(new Intent(this, SignInActivity.class));
+                return true;
+            case R.id.edit_name:
+                //startActivity(new Intent(this, MenuTestActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
