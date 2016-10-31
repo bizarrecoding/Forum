@@ -121,24 +121,6 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                             ctuserkey = user.key;
                         } else {
                             ctuserkey = child.getKey();
-                            Toast.makeText(ForumActivity.this, ctuserkey, Toast.LENGTH_LONG).show();
-                            /*for (DataSnapshot thkey : child.child("threads").getChildren()){
-                                if(thkey!=null){
-                                    chatkeys.add(thkey.getValue(String.class));
-                                }
-                            }
-                            for(String key : chatkeys){
-                                DatabaseReference threadsTable =  FirebaseDatabase.getInstance().getReference().child("Threads");
-                                threadsTable.orderByKey().equalTo(key).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        ChatThread cth = dataSnapshot.getValue(ChatThread.class);
-                                        threads.add(cth);
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {}
-                                });
-                            }*/
                         }
                     }
                 }
@@ -155,33 +137,6 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
                 .build();
-
-        if (ctuserkey!=null){
-            /*DatabaseReference threadsTable= FirebaseDatabase.getInstance().getReference().child("Threads");
-            threadsTable.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    for(DataSnapshot ds : dataSnapshot.getChildren()){
-                        for(DataSnapshot uids : ds.child("users").getChildren()){
-                            Log.d("uids",uids.getKey());
-                            if(uids.getKey()==mFirebaseUser.getUid()){
-                                threads.add(ds.getValue(ChatThread.class));
-                            }
-                        }
-                    }
-                    threadAdapter.setData(threads);
-                }
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            });*/
-            Toast.makeText(ForumActivity.this, ctuserkey, Toast.LENGTH_LONG).show();
-        }
 
         Query query = FirebaseDatabase.getInstance().getReference().child("Threads");
         query.addValueEventListener(new ValueEventListener() {
@@ -210,28 +165,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-
-        /*FirebaseListAdapter<ChatThread> myAdapter = new FirebaseListAdapter<ChatThread>(this, ChatThread.class, R.layout.threadrow, query) {
-            @Override
-            protected void populateView(View v, ChatThread model, int position) {
-                TextView tv1,tv2;
-                tv1= (TextView) v.findViewById(R.id.tvThreadtitle);
-                tv2= (TextView) v.findViewById(R.id.tvThreadDescription);
-                tv1.setText(model.title);
-                tv2.setText(model.description);
-            }
-        };*/
-
         lv = (ListView) findViewById(R.id.list);
-        String[] values = new String[]{
-                "Adapter implementation",
-                "Simple List View in Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
         View mainThreadView = findViewById(R.id.main);
         mainThreadView.setOnClickListener(new View.OnClickListener() {
             @Override
