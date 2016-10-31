@@ -16,6 +16,13 @@ public class ChatThread {
 
     public ChatThread(){}
 
+    public ChatThread(String title, String desc, String key){
+        this.title = title;
+        this.description = desc;
+        this.threadId = key;
+        this.users = users;
+    }
+
     public ChatThread(String title, String desc, String key, HashMap<String,Object> users){
         this.title = title;
         this.description = desc;
@@ -27,7 +34,9 @@ public class ChatThread {
         HashMap<String, Object> result = new HashMap<>();
         result.put("title", title);
         result.put("description", description);
-        result.put("users",users);
+        if(users!=null) {
+            result.put("users", users);
+        }
         return result;
     }
 }

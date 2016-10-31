@@ -187,12 +187,17 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                threads.clear();
                 for(DataSnapshot th : snapshot.getChildren()){
-                    String title = th.child("title").toString();
-                    String description = th.child("description").toString();
+                    String title = th.child("title").getValue(String.class);
+                    String description = th.child("description").getValue(String.class);
+                    String threadId = th.child("threadId").getValue(String.class);
                     Boolean member = th.child("users").toString().contains(mFirebaseUser.getUid());
                     if(member){
-                        Log.d("member present in", title);
+                        ChatThread cth = new ChatThread(title,description,threadId);
+                        threads.add(cth);
+                        threadAdapter.notifyDataSetChanged();
+                        Log.d("member present in", title+" - "+threadId);
                     }
                 }
 

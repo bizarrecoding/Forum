@@ -5,7 +5,7 @@ package com.example.herik21.forum;
  */
 public class Message {
 
-    private int threadId;
+    private String threadId;
     private String content;
     private String user;
     private String timestamp;
@@ -13,7 +13,7 @@ public class Message {
 
     public Message(){}
 
-    public Message(int id, String content, String user, String timestamp, String photoUrl) {
+    public Message(String id, String content, String user, String timestamp, String photoUrl) {
         this.threadId = id;
         this.content = content;
         this.user = user;
@@ -21,11 +21,11 @@ public class Message {
         this.photoUrl = photoUrl;
     }
 
-    public int getThreadId() {
+    public String getThreadId() {
         return threadId;
     }
 
-    public void setThreadId(int threadId) {
+    public void setThreadId(String threadId) {
         this.threadId = threadId;
     }
 

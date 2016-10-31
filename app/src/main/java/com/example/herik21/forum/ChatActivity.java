@@ -38,7 +38,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private String mUsername;
     private String mPhotoUrl;
-    private int mThreadID;
+    private String mThreadID;
     private ImageButton Send;
     private String mTitle;
 
@@ -50,7 +50,7 @@ public class ChatActivity extends AppCompatActivity {
         Intent parent = getIntent();
         mUsername = parent.getStringExtra("user");
         mPhotoUrl = parent.getStringExtra("profilepic");
-        mThreadID = Integer.parseInt(parent.getStringExtra("threadId"));
+        mThreadID = parent.getStringExtra("threadId");
         mTitle = parent.getStringExtra("title");
 
         getSupportActionBar().setTitle(mTitle);
