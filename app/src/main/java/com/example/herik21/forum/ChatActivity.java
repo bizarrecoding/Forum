@@ -71,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
                 Message.class,
                 R.layout.message,
                 MessageViewHolder.class,
-                messageRef ){        //mFirebaseDatabaseReference.child(MESSAGES_CHILD)) {
+                messageRef ){
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
@@ -91,6 +91,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         };
+
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {

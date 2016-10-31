@@ -11,25 +11,29 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class ThreadAdapter extends BaseAdapter {
 
     private Context context;
-    private String[] data;
+    private ArrayList<ChatThread> data;
 
-    public ThreadAdapter(Context context, String[] values){
+    public ThreadAdapter(Context context, ArrayList<ChatThread> values){
         this.context=context;
         this.data=values;
     }
 
+    public void setData(ArrayList<ChatThread> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
     @Override
     public int getCount() {
-        return data.length;
+        return data.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return data[position];
-    }
+    public Object getItem(int position) { return data.get(position); }
 
     @Override
     public long getItemId(int position) {
@@ -38,7 +42,7 @@ public class ThreadAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String text=data[position];
+        ChatThread cth = data.get(position);
 
         if(convertView==null){
             LayoutInflater inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,7 +52,8 @@ public class ThreadAdapter extends BaseAdapter {
         TextView tv1,tv2;
         tv1= (TextView) convertView.findViewById(R.id.tvThreadtitle);
         tv2= (TextView) convertView.findViewById(R.id.tvThreadDescription);
-        tv1.setText(text);
+        tv1.setText(cth.title);
+        tv2.setText(cth.description);
         return convertView;
     }
 }

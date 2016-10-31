@@ -97,6 +97,7 @@
             android:layout_marginLeft="16dp"
             android:textStyle="normal|bold" />
 
+        <!--android.support.v7.widget.RecyclerView-->
         <ListView
             android:id="@+id/list"
             android:layout_height="0dp"
