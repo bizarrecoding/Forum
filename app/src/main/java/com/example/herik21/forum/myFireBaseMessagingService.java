@@ -2,6 +2,7 @@ package com.example.herik21.forum;
 
 import android.util.Log;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -14,5 +15,12 @@ public class myFireBaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
         Log.d("MessageService", "From: " + remoteMessage.getFrom());
         Log.d("MessageService", "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        FirebaseMessaging.getInstance().subscribeToTopic("movil");
+    }
+
+    @Override
+    public void onMessageSent(String s) {
+        super.onMessageSent(s);
+        Log.d("MessageService",s);
     }
 }

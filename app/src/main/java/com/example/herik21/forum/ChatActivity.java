@@ -1,6 +1,7 @@
 package com.example.herik21.forum;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -22,19 +22,33 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private static final String MESSAGES_CHILD = "messages";
-    public ListView messageList;
+    /*private static final String MESSAGES_CHILD = "messages";
+    /*public ListView messageList;
     public ArrayList<Message> messages;
     public MessageAdapter cAdapter;
+    */
     public EditText msg;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private DatabaseReference mFirebaseDatabaseReference;
+    private DatabaseReference messageTable;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> mFirebaseAdapter;
     private String mUsername;
     private String mPhotoUrl;
@@ -52,19 +66,19 @@ public class ChatActivity extends AppCompatActivity {
         mPhotoUrl = parent.getStringExtra("profilepic");
         mThreadID = parent.getStringExtra("threadId");
         mTitle = parent.getStringExtra("title");
-
+        FirebaseMessaging.getInstance().subscribeToTopic(mTitle.replace(" ","_"));
         getSupportActionBar().setTitle(mTitle);
         msg = (EditText)findViewById(R.id.content);
         Send = (ImageButton)findViewById(R.id.Send);
-        Toast.makeText(this,"thread id: "+mThreadID,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,"thread id: "+mThreadID,Toast.LENGTH_SHORT).show();
 
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(true);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        Query messageRef = mFirebaseDatabaseReference.child(MESSAGES_CHILD).orderByChild("threadId").equalTo(mThreadID);
+        messageTable = FirebaseDatabase.getInstance().getReference();
+        Query messageRef = messageTable.child("messages").orderByChild("threadId").equalTo(mThreadID);
 
         Log.d("MSGs","query: id equal to"+mThreadID);
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(
@@ -87,7 +101,6 @@ public class ChatActivity extends AppCompatActivity {
                     viewHolder.time.setText(time[0]);
                     viewHolder.time2.setVisibility(View.INVISIBLE);
                 }
-
                 if (newMessage.getPhotoUrl() == null) {
                     viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(ChatActivity.this,
                                             R.drawable.ic_account_circle_black_36dp));
@@ -148,9 +161,19 @@ public class ChatActivity extends AppCompatActivity {
                             mUsername,
                             getNow(),
                             mPhotoUrl);
-                    mFirebaseDatabaseReference.child(MESSAGES_CHILD)
-                            .push().setValue(newMessage);
+                    //messageTable;
+                    String key = messageTable.child("messages").push().getKey();
+                    messageTable.child("messages").child(key).setValue(newMessage);
                     msg.setText("");
+
+                    FirebaseMessaging fm = FirebaseMessaging.getInstance();
+                    Log.d("FCM","about to send");
+                    new PostTask().execute();
+                    fm.send(new RemoteMessage.Builder("966970890362" + "@gcm.googleapis.com")
+                            .setMessageId(key)//Integer.toString(msgId.incrementAndGet()))
+                            .addData("my_message", "Hello World")
+                            .build());
+
                 }
             }
         });
@@ -161,5 +184,42 @@ public class ChatActivity extends AppCompatActivity {
         now.setToNow();
         String sTime = now.format("%d-%m-%Y %T");
         return sTime.substring(0,sTime.length()-3);
+    }
+
+    private class PostTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(15000);
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Authorization","key=AIzaSyDDrDOsQ_ksfdlsUBdi9P5HtzORlwL-EM8");
+                conn.setRequestProperty("Content-Type","application/json");
+                conn.setDoOutput(true);
+
+                JSONObject json = new JSONObject();
+                json.put("to","/topics/"+mTitle.replace(" ","_"));
+                JSONObject info = new JSONObject();
+                info.put("title", "Greendit");
+                info.put("body", "New message in "+mTitle);
+                json.put("notification", info);
+
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(json.toString());
+                wr.flush();
+                conn.getInputStream();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }

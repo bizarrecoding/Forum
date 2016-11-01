@@ -25,12 +25,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NewThreadActivity extends AppCompatActivity {
 
@@ -124,27 +127,34 @@ public class NewThreadActivity extends AppCompatActivity {
     public void onClickCreate(View view){
         String ctuserid = getIntent().getStringExtra("uid");
         String name = ((EditText) findViewById(R.id.newThread)).getText().toString();
+        String sname = name.replace(" ","_");
         String description = ((EditText) findViewById(R.id.description)).getText().toString();
+
         if(name.length() >= 4 && members.size() >= 1) {
             //Create thread
-            DatabaseReference threadsTable = FirebaseDatabase.getInstance().getReference().child("Threads");
-            String key = threadsTable.push().getKey();
-            ChatThread cThread = new ChatThread(name, description, key, new HashMap<String,Object>());
-            threadsTable.child(key).setValue(cThread);
-            Map<String, Object> tChildUpdates = new HashMap<>();
-            for (User u : members){
-                if(u.idUsuario!=null && u.key!=null){
-                    //register users in thread
-                    tChildUpdates.put(u.idUsuario,"true");
+            try {
+                FirebaseMessaging.getInstance().subscribeToTopic(sname);
+                DatabaseReference threadsTable = FirebaseDatabase.getInstance().getReference().child("Threads");
+                String key = threadsTable.push().getKey();
+                ChatThread cThread = new ChatThread(name, description, key, new HashMap<String, Object>());
+                threadsTable.child(key).setValue(cThread);
+                Map<String, Object> tChildUpdates = new HashMap<>();
+                for (User u : members) {
+                    if (u.idUsuario != null) {
+                        //register users in thread
+                        tChildUpdates.put(u.idUsuario, "true");
+                    }
                 }
+                tChildUpdates.put(ctuserid, "true");
+                threadsTable.child(key).child("users").updateChildren(tChildUpdates);
+                finish();
+            }catch (Exception e){
+                Toast.makeText(this,"Title not valid",Toast.LENGTH_LONG).show();
             }
-            tChildUpdates.put(ctuserid,"true");
-            threadsTable.child(key).child("users").updateChildren(tChildUpdates);
-            finish();
-        }else if(name.length() < 4){
-            //name too short
-        }else if(members.size() < 2){
-            //members to short
+        }else if(sname.length() < 4){
+            Toast.makeText(this,"Title too short",Toast.LENGTH_LONG).show();
+        }else if(members.size() < 1){
+            Toast.makeText(this,"A thread needs 2 or more members",Toast.LENGTH_LONG).show();
         }
     }
 }

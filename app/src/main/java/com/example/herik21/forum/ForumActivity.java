@@ -7,9 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,34 +17,27 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import io.fabric.sdk.android.Fabric;
 
 
@@ -64,8 +55,6 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private String mDisplayname = "Anonymous";
     private String mPhotoUrl;
-    //private String ctuserkey;
-    private ArrayList<String> chatkeys;
     public ArrayList<ChatThread> threads;
 
     @Override
@@ -105,7 +94,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                         Log.d("New user",key+" registered");
                         User user = new User(userid, username, mDisplayname, photoUrl, key);
                         userTable.child(key).setValue(user);
-                        Toast.makeText(ForumActivity.this,"User: "+key+" registered",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(ForumActivity.this,"User: "+key+" registered",Toast.LENGTH_SHORT).show();
                     }/* else {
                         Toast.makeText(ForumActivity.this,"User: "+snapshot.getValue()+"is already registered",Toast.LENGTH_SHORT).show();
                     }*/
@@ -148,9 +137,12 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                     if(member){
                         ChatThread cth = new ChatThread(title,description,threadId);
                         threads.add(cth);
-                        threadAdapter.notifyDataSetChanged();
                         Log.d("member present in", title+" - "+threadId);
                     }
+                }
+                threadAdapter.notifyDataSetChanged();
+                for(ChatThread cth : threads){
+                    FirebaseMessaging.getInstance().subscribeToTopic(cth.title.replace(" ","_"));
                 }
             }
             @Override
@@ -216,6 +208,9 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mDisplayname = "Anonymous";
                 startActivity(new Intent(this, SignInActivity.class));
+                for(ChatThread cth : threads){
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(cth.title.replace(" ","_"));
+                }
                 return true;
             case R.id.edit_name:
                 //startActivity(new Intent(this, MenuTestActivity.class));
