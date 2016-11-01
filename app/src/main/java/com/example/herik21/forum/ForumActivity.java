@@ -107,27 +107,28 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             ctuser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    //iteratre
-                    for (DataSnapshot child : snapshot.getChildren()) {
-                        if (child.getValue() == null) {
-                            //user exists, do something
-                            String username = mFirebaseUser.getEmail();
-                            String userid = mFirebaseUser.getUid();
-                            String photoUrl = mFirebaseUser.getPhotoUrl().toString();
-                            DatabaseReference userTable = FirebaseDatabase.getInstance().getReference().child("Users");
-                            String key = userTable.push().getKey();
-                            User user = new User(userid, username, mDisplayname, photoUrl, key);
-                            userTable.child(key).setValue(user);
-                            ctuserkey = user.key;
-                        } else {
-                            ctuserkey = child.getKey();
-                        }
+                    Log.d("user",snapshot.toString());
+                    if (snapshot.getValue() == null) {
+                        //user exists, do something
+                        Log.d("New user",mFirebaseUser.getUid());
+                        String username = mFirebaseUser.getEmail();
+                        String userid = mFirebaseUser.getUid();
+                        String photoUrl = mFirebaseUser.getPhotoUrl().toString();
+                        DatabaseReference userTable = FirebaseDatabase.getInstance().getReference().child("Users");
+                        String key = userTable.push().getKey();
+                        Log.d("New user",key+" registered");
+                        User user = new User(userid, username, mDisplayname, photoUrl, key);
+                        userTable.child(key).setValue(user);
+                        ctuserkey = user.key;
+                        Toast.makeText(ForumActivity.this,"User: "+key+" registered",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ForumActivity.this,"User: "+snapshot.getValue()+"is already registered",Toast.LENGTH_SHORT).show();
+                        ctuserkey = snapshot.getKey();
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    Toast.makeText(ForumActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -155,10 +156,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                         Log.d("member present in", title+" - "+threadId);
                     }
                 }
-
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(ForumActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();

@@ -20,7 +20,6 @@ public class ChatThread {
         this.title = title;
         this.description = desc;
         this.threadId = key;
-        this.users = users;
     }
 
     public ChatThread(String title, String desc, String key, HashMap<String,Object> users){

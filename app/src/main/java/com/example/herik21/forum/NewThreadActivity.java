@@ -92,7 +92,9 @@ public class NewThreadActivity extends AppCompatActivity {
 
                         }
                         @Override
-                        public void onCancelled(DatabaseError databaseError) { }
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(NewThreadActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     });
                 }
             }
@@ -105,8 +107,6 @@ public class NewThreadActivity extends AppCompatActivity {
         userAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userToAdd.setAdapter(userAdapter);
     }
-
-
 
     public void onClickAdd(View view){
         members.add(ctuser);

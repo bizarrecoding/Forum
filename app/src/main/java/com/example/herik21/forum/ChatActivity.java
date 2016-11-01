@@ -80,7 +80,6 @@ public class ChatActivity extends AppCompatActivity {
                 viewHolder.content.setText(newMessage.getContent());
                 viewHolder.user.setText(newMessage.getUser());
                 viewHolder.time.setText(newMessage.getTimestamp());
-                //Log.d("MSGs","message threadid:"+newMessage.getThreadId());
                 if (newMessage.getPhotoUrl() == null) {
                     viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(ChatActivity.this,
                                             R.drawable.ic_account_circle_black_36dp));
