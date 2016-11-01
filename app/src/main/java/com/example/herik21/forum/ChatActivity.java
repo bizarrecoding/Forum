@@ -79,7 +79,15 @@ public class ChatActivity extends AppCompatActivity {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.content.setText(newMessage.getContent());
                 viewHolder.user.setText(newMessage.getUser());
-                viewHolder.time.setText(newMessage.getTimestamp());
+                String[] time = newMessage.getTimestamp().split(" ");
+                if(time.length == 2) {
+                    viewHolder.time.setText(time[0]);
+                    viewHolder.time2.setText(time[1]);
+                }else{
+                    viewHolder.time.setText(time[0]);
+                    viewHolder.time2.setVisibility(View.INVISIBLE);
+                }
+
                 if (newMessage.getPhotoUrl() == null) {
                     viewHolder.icon.setImageDrawable(ContextCompat.getDrawable(ChatActivity.this,
                                             R.drawable.ic_account_circle_black_36dp));
@@ -133,15 +141,17 @@ public class ChatActivity extends AppCompatActivity {
         Send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Message newMessage = new Message(
-                        mThreadID,
-                        msg.getText().toString(),
-                        mUsername,
-                        getNow(),
-                        mPhotoUrl);
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD)
-                        .push().setValue(newMessage);
-                msg.setText("");
+                if(msg.getText().toString().trim().length()>0 ){
+                    Message newMessage = new Message(
+                            mThreadID,
+                            msg.getText().toString(),
+                            mUsername,
+                            getNow(),
+                            mPhotoUrl);
+                    mFirebaseDatabaseReference.child(MESSAGES_CHILD)
+                            .push().setValue(newMessage);
+                    msg.setText("");
+                }
             }
         });
     }
@@ -149,7 +159,7 @@ public class ChatActivity extends AppCompatActivity {
     public static String getNow() {
         Time now = new Time();
         now.setToNow();
-        String sTime = now.format("%d-%m-%Y");
-        return sTime;
+        String sTime = now.format("%d-%m-%Y %T");
+        return sTime.substring(0,sTime.length()-3);
     }
 }

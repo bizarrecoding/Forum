@@ -64,7 +64,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient mGoogleApiClient;
     private String mDisplayname = "Anonymous";
     private String mPhotoUrl;
-    private String ctuserkey;
+    //private String ctuserkey;
     private ArrayList<String> chatkeys;
     public ArrayList<ChatThread> threads;
 
@@ -88,20 +88,6 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             finish();
             return;
         } else {
-            mDisplayname = mFirebaseUser.getDisplayName();
-            Log.d("LOGIN", "email: " + mFirebaseUser.getEmail());
-            getSupportActionBar().setTitle(mDisplayname);
-            ImageView userprofile = (ImageView) findViewById(R.id.usericon);
-            Glide.with(ForumActivity.this)
-                    .load(mFirebaseUser.getPhotoUrl())
-                    .into(userprofile);
-            Snackbar.make(findViewById(R.id.textView4), "Welcome, " + mDisplayname, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            if (mFirebaseUser.getPhotoUrl() != null) {
-                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
-            }
-            chatkeys = new ArrayList<>();
-            threads =  new ArrayList<>();
             DatabaseReference userTable = FirebaseDatabase.getInstance().getReference().child("Users");
             final Query ctuser = userTable.orderByChild("idUsuario").equalTo(mFirebaseUser.getUid()).limitToFirst(1);
             ctuser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -119,12 +105,10 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                         Log.d("New user",key+" registered");
                         User user = new User(userid, username, mDisplayname, photoUrl, key);
                         userTable.child(key).setValue(user);
-                        ctuserkey = user.key;
                         Toast.makeText(ForumActivity.this,"User: "+key+" registered",Toast.LENGTH_SHORT).show();
-                    } else {
+                    }/* else {
                         Toast.makeText(ForumActivity.this,"User: "+snapshot.getValue()+"is already registered",Toast.LENGTH_SHORT).show();
-                        ctuserkey = snapshot.getKey();
-                    }
+                    }*/
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -132,6 +116,18 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             });
 
+            mDisplayname = mFirebaseUser.getDisplayName();
+            getSupportActionBar().setTitle(mDisplayname);
+            ImageView userprofile = (ImageView) findViewById(R.id.usericon);
+            Glide.with(ForumActivity.this)
+                    .load(mFirebaseUser.getPhotoUrl())
+                    .into(userprofile);
+            Snackbar.make(findViewById(R.id.textView4), "Welcome, " + mDisplayname, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            if (mFirebaseUser.getPhotoUrl() != null) {
+                mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+            }
+            threads =  new ArrayList<>();
         }
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -201,7 +197,7 @@ public class ForumActivity extends AppCompatActivity implements GoogleApiClient.
             public void onClick(View view) {
                 //create new thread
                 Intent i = new Intent(ForumActivity.this, NewThreadActivity.class);
-                i.putExtra("key",ctuserkey);
+                //i.putExtra("key",ctuserkey);
                 i.putExtra("uid",mFirebaseUser.getUid());
                 startActivity(i);
             }

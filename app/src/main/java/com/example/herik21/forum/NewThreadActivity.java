@@ -101,7 +101,6 @@ public class NewThreadActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) { }
         });
-        //textView.setAdapter(adapter);
         final List<String> sugestions = new ArrayList<String>();
         ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sugestions);
         userAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,17 +108,21 @@ public class NewThreadActivity extends AppCompatActivity {
     }
 
     public void onClickAdd(View view){
-        members.add(ctuser);
-        uAdapter.setData(members);
-        memberslist.setAdapter(uAdapter);
-        userToAdd.setText("");
-        userToAdd.setEnabled(true);
-        btadd.setEnabled(false);
+        if(!members.contains(ctuser)){
+            members.add(ctuser);
+            uAdapter.setData(members);
+            memberslist.setAdapter(uAdapter);
+            userToAdd.setText("");
+            userToAdd.setEnabled(true);
+            btadd.setEnabled(false);
+        }else{
+            userToAdd.setText("");
+            userToAdd.setEnabled(true);
+            btadd.setEnabled(false);
+        }
     }
     public void onClickCreate(View view){
-        String ctuserkey = getIntent().getStringExtra("key");
         String ctuserid = getIntent().getStringExtra("uid");
-
         String name = ((EditText) findViewById(R.id.newThread)).getText().toString();
         String description = ((EditText) findViewById(R.id.description)).getText().toString();
         if(name.length() >= 4 && members.size() >= 1) {
@@ -129,22 +132,14 @@ public class NewThreadActivity extends AppCompatActivity {
             ChatThread cThread = new ChatThread(name, description, key, new HashMap<String,Object>());
             threadsTable.child(key).setValue(cThread);
             Map<String, Object> tChildUpdates = new HashMap<>();
-
-            //register thread in user
-            DatabaseReference userTable = FirebaseDatabase.getInstance().getReference().child("Users");
-            Map<String, Object> uChildUpdates = new HashMap<>();
-            uChildUpdates.put("/threads/"+key, "true");
             for (User u : members){
                 if(u.idUsuario!=null && u.key!=null){
-                    userTable.child(u.key).updateChildren(uChildUpdates);
                     //register users in thread
                     tChildUpdates.put(u.idUsuario,"true");
                 }
             }
             tChildUpdates.put(ctuserid,"true");
             threadsTable.child(key).child("users").updateChildren(tChildUpdates);
-            //add current user to the new thread
-            userTable.child(ctuserkey).updateChildren(uChildUpdates);
             finish();
         }else if(name.length() < 4){
             //name too short

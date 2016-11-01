@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
     public TextView time;
+    public TextView time2;
     public TextView content;
     public TextView user;
     public ImageView icon;
@@ -21,5 +22,6 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         user = (TextView) itemView.findViewById(R.id.mUser);
         icon = (ImageView) itemView.findViewById(R.id.icon);
         time = (TextView) itemView.findViewById(R.id.mTime);
+        time2 = (TextView)itemView.findViewById(R.id.mTime2);
     }
 }
