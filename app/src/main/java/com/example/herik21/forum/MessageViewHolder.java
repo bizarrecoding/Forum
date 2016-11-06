@@ -15,6 +15,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public TextView content;
     public TextView user;
     public ImageView icon;
+    public ImageView image;
 
     public MessageViewHolder(View v) {
         super(v);
@@ -22,6 +23,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         user = (TextView) itemView.findViewById(R.id.mUser);
         icon = (ImageView) itemView.findViewById(R.id.icon);
         time = (TextView) itemView.findViewById(R.id.mTime);
-        time2 = (TextView)itemView.findViewById(R.id.mTime2);
+        time2 = (TextView) itemView.findViewById(R.id.mTime2);
+        image = (ImageView) itemView.findViewById(R.id.image);
     }
 }

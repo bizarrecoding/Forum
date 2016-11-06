@@ -1,7 +1,11 @@
 package com.example.herik21.forum;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,29 +18,39 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -55,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mThreadID;
     private ImageButton Send;
     private String mTitle;
+    private final int PIC_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
                 messageRef ){
 
             @Override
-            protected void populateViewHolder(MessageViewHolder viewHolder,
+            protected void populateViewHolder(final MessageViewHolder viewHolder,
                                               Message newMessage, int position) {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.content.setText(newMessage.getContent());
@@ -108,6 +123,31 @@ public class ChatActivity extends AppCompatActivity {
                     Glide.with(ChatActivity.this)
                         .load(newMessage.getPhotoUrl())
                         .into(viewHolder.icon);
+                }
+                String src = newMessage.getContent();
+                if(src.length()>5 && src.substring(0,5).equals("$img/")){
+                    try {
+                        String imgref = src.substring(5, src.length());
+                        Log.d("img",imgref);
+                        StorageReference storageRef = FirebaseStorage.getInstance()
+                                .getReferenceFromUrl("gs://forum-1b336.appspot.com");
+                        storageRef.child(imgref).getDownloadUrl().addOnSuccessListener(new OnSuccessListener() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                Uri url = (Uri)o;
+                                Glide.with(ChatActivity.this)
+                                        .load(url.toString())
+                                        .into(viewHolder.image);
+                            }
+                        });
+                        viewHolder.image.setVisibility(View.VISIBLE);
+                        viewHolder.content.setVisibility(View.INVISIBLE);
+                        //viewHolder.image.setMinimumHeight(100);
+                    }catch (Exception e){
+                        Log.e("Error",e.getMessage()+"\n"+e.getCause().toString());
+                    }
+                }else{
+                    viewHolder.content.setText(newMessage.getContent());
                 }
             }
         };
@@ -155,7 +195,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(msg.getText().toString().trim().length()>0 ){
-                    Message newMessage = new Message(
+                    /*Message newMessage = new Message(
                             mThreadID,
                             msg.getText().toString(),
                             mUsername,
@@ -168,13 +208,85 @@ public class ChatActivity extends AppCompatActivity {
 
                     FirebaseMessaging fm = FirebaseMessaging.getInstance();
                     Log.d("FCM","about to send");
-                    new PostTask().execute();
-                    fm.send(new RemoteMessage.Builder("966970890362" + "@gcm.googleapis.com")
-                            .setMessageId(key)//Integer.toString(msgId.incrementAndGet()))
-                            .addData("my_message", "Hello World")
-                            .build());
-
+                    new PostTask().execute();*/
+                    sendToFirebase(msg.getText().toString());
                 }
+            }
+        });
+
+        ImageButton pic = (ImageButton)findViewById(R.id.pic);
+        pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                i.setType("image/*");
+                startActivityForResult(i, PIC_REQUEST);
+            }
+        });
+    }
+
+    protected void sendToFirebase(String content){
+        Message newMessage = new Message(
+                mThreadID,
+                content,
+                mUsername,
+                getNow(),
+                mPhotoUrl);
+        //messageTable;
+        String key = messageTable.child("messages").push().getKey();
+        messageTable.child("messages").child(key).setValue(newMessage);
+        msg.setText("");
+
+        FirebaseMessaging fm = FirebaseMessaging.getInstance();
+        Log.d("FCM","about to send");
+        new PostTask().execute();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PIC_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    if (data == null) {
+                        return;
+                    }else {
+                        Uri selectedImage = data.getData();
+                        InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                        Bitmap pic = BitmapFactory.decodeStream(imageStream);
+                        uploadImage(pic);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    public void uploadImage(Bitmap picture){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://forum-1b336.appspot.com");
+        Long tsLong = System.currentTimeMillis()/1000;
+        final String ts = tsLong.toString();
+        StorageReference picRef = storageRef.child(ts+".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = picRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Toast.makeText(ChatActivity.this,exception.getMessage(),Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Log.d("img",downloadUrl.toString());
+                Toast.makeText(ChatActivity.this,downloadUrl.getHost()+""+downloadUrl.getPath(),Toast.LENGTH_LONG).show();
+                //sendToFirebase("$img/"+downloadUrl.toString());
+                sendToFirebase("$img/"+ts+".jpg");
             }
         });
     }
@@ -218,7 +330,6 @@ public class ChatActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
     }
