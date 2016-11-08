@@ -11,15 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -29,9 +30,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,26 +38,17 @@ import com.google.firebase.storage.UploadTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
 
-    /*private static final String MESSAGES_CHILD = "messages";
-    /*public ListView messageList;
-    public ArrayList<Message> messages;
-    public MessageAdapter cAdapter;
-    */
     public EditText msg;
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -82,6 +72,8 @@ public class ChatActivity extends AppCompatActivity {
         mThreadID = parent.getStringExtra("threadId");
         mTitle = parent.getStringExtra("title");
         FirebaseMessaging.getInstance().subscribeToTopic(mTitle.replace(" ","_"));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(mTitle);
         msg = (EditText)findViewById(R.id.content);
         Send = (ImageButton)findViewById(R.id.Send);
@@ -296,6 +288,27 @@ public class ChatActivity extends AppCompatActivity {
         now.setToNow();
         String sTime = now.format("%d-%m-%Y %T");
         return sTime.substring(0,sTime.length()-3);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        if(!mThreadID.equals("-1")) {
+            getMenuInflater().inflate(R.menu.chat_menu, menu);
+        }
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent i = new Intent(this,addUserToChat.class);
+                i.putExtra("key",mThreadID);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class PostTask extends AsyncTask<Void, Void, Void> {

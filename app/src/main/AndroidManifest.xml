@@ -37,17 +37,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".NewThreadActivity" />
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".NewThreadActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".addUserToChat"
+            android:windowSoftInputMode="stateHidden" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="7521cab6b39df5d57294d2bbb4e816fff322df71" />
 
-        <activity
-            android:name=".MenuTestActivity"
-            android:label="@string/title_activity_menu_test"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>

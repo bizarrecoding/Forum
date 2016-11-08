@@ -1,5 +1,6 @@
 package com.example.herik21.forum;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Map;
  * Created by Herik21 on 29/10/2016.
  */
 
-public class User {
+public class User implements Serializable {
 
     public String idUsuario;
     public String Username;
