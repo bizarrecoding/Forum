@@ -204,12 +204,10 @@ public class ForumActivity extends AppCompatActivity
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, final int verticalOffset) {
                 if(verticalOffset==-480){
-                    toolbar.setTitle(R.string.app_name);
+                    getSupportActionBar().setTitle(R.string.app_name);
                 }else{
                     getSupportActionBar().setTitle(mDisplayname);
-                    toolbar.setTitle(mDisplayname);
                 }
-                //((NestedScrollView) findViewById(R.id.nestedscroll)).requestDisallowInterceptTouchEvent(!(verticalOffset == -480));
                 lv.setOnTouchListener(new View.OnTouchListener() {
                     // Setting on Touch Listener for handling the touch inside ScrollView
                     @Override
@@ -235,17 +233,11 @@ public class ForumActivity extends AppCompatActivity
             public void onClick(View view) {
                 //create new thread
                 Intent i = new Intent(ForumActivity.this, NewThreadActivity.class);
-                //i.putExtra("key",ctuserkey);
                 i.putExtra("uid",mFirebaseUser.getUid());
                 startActivity(i);
             }
         });
     }
-    /*public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }*/
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

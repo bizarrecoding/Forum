@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/Team"
-        android:textSize="22sp"
+        android:textSize="24sp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_constraintRight_creator="1"
@@ -32,7 +32,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         app:layout_constraintRight_toRightOf="@+id/Team"
         app:layout_constraintLeft_toLeftOf="@+id/Team"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:textSize="18sp" />
 
     <TextView
         android:text="Sebastian Burbano"
@@ -44,7 +45,8 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8"
         app:layout_constraintLeft_toLeftOf="@+id/Team"
         app:layout_constraintRight_toRightOf="@+id/Team"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:textSize="18sp" />
 
     <TextView
         android:text="Santiago Llanos"
@@ -56,17 +58,20 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6"
         app:layout_constraintLeft_toLeftOf="@+id/Team"
         app:layout_constraintRight_toRightOf="@+id/Team"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:textSize="18sp" />
 
     <TextView
         android:text="Eduardo Ramirez"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView9"
-        tools:layout_editor_absoluteX="139dp"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@+id/Team"
-        tools:ignore="HardcodedText,MissingConstraints" />
+        tools:ignore="HardcodedText,MissingConstraints"
+        app:layout_constraintLeft_toLeftOf="@+id/Team"
+        app:layout_constraintRight_toRightOf="@+id/Team"
+        android:textSize="18sp" />
 
     <ImageView
         android:layout_width="150dp"
@@ -78,7 +83,7 @@
         android:layout_marginStart="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_height="150dp"
         android:contentDescription="Bizarre Coding" />
