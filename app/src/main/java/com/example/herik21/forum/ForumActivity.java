@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -68,6 +69,7 @@ public class ForumActivity extends AppCompatActivity
     private String mPhotoUrl;
     public ArrayList<ChatThread> threads;
     private String ctuserkey;
+    private static int lock = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,7 @@ public class ForumActivity extends AppCompatActivity
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Material Design Widgets
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -99,15 +101,18 @@ public class ForumActivity extends AppCompatActivity
             finish();
             return;
         } else {
-            DatabaseReference userTable = FirebaseDatabase.getInstance().getReference().child("Users");
+            final ImageView userprofile = (ImageView) findViewById(R.id.usericon);
+            String tempDisplayname = mFirebaseUser.getDisplayName();
+            //getSupportActionBar().setTitle(tempDisplayname);
+            final DatabaseReference userTable = FirebaseDatabase.getInstance().getReference().child("Users");
             final Query ctuser = userTable.orderByChild("idUsuario").equalTo(mFirebaseUser.getUid()).limitToFirst(1);
-            ctuser.addValueEventListener(new ValueEventListener() {
+            ctuser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    Log.d("user",snapshot.toString());
                     if (snapshot.getValue() == null) {
                         //user exists, do something
                         Log.d("New user", mFirebaseUser.getUid());
+                        mDisplayname = mFirebaseUser.getDisplayName();
                         String username = mFirebaseUser.getEmail();
                         String userid = mFirebaseUser.getUid();
                         String photoUrl = mFirebaseUser.getPhotoUrl().toString();
@@ -119,15 +124,30 @@ public class ForumActivity extends AppCompatActivity
                     } else {
                         for (DataSnapshot user : snapshot.getChildren()) {
                             Map<String, Object> u = (Map) user.getValue();
+                            Map<String, Object> update = new HashMap<>();
+                            update.put("PhotoURL",mFirebaseUser.getPhotoUrl().toString());
+                            userTable.child(u.get("key").toString()).updateChildren(update);
                             ctuserkey = u.get("key").toString();
+                            mDisplayname = u.get("Nickname").toString();
+                            String mPhoto = u.get("PhotoURL").toString();
                             navigationView.getMenu().getItem(0).setChecked(Boolean.parseBoolean(u.get("notificacion").toString()));
                             for (String key : u.keySet()) {
                                 Log.d(key, u.get(key).toString());
                             }
-                            mDisplayname = u.get("Nickname").toString();
+                            Log.d("UI","Should update");
+                            getSupportActionBar().setTitle(mDisplayname);
                             ForumActivity.this.getSupportActionBar().setTitle(mDisplayname);
+                            Glide.with(ForumActivity.this)
+                                    .load(u.get("PhotoURL").toString())
+                                    .into(userprofile);
                             //Toast.makeText(ForumActivity.this,"User nickname: "+u.get("Nickname").toString(),Toast.LENGTH_SHORT).show();
                         }
+                    }
+                    if(lock == 1){
+                        Snackbar.make(findViewById(R.id.nestedscroll), "Welcome, " + mDisplayname, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+
+                        lock = 0;
                     }
                 }
                 @Override
@@ -135,15 +155,16 @@ public class ForumActivity extends AppCompatActivity
                     Toast.makeText(ForumActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-            String tempDisplayname = mFirebaseUser.getDisplayName();
-            getSupportActionBar().setTitle(tempDisplayname);
-            ImageView userprofile = (ImageView) findViewById(R.id.usericon);
-
+            Log.d("photourl",mFirebaseUser.getPhotoUrl().toString());
+            if(!mDisplayname.equals("Anonymous")) {
+                getSupportActionBar().setTitle(mDisplayname);
+            }else{
+                getSupportActionBar().setTitle(mFirebaseUser.getDisplayName());
+            }
             Glide.with(ForumActivity.this)
-                    .load(mFirebaseUser.getPhotoUrl())
-                    .into(userprofile);
-            Snackbar.make(findViewById(R.id.textView4), "Welcome, " + tempDisplayname, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                .load(mFirebaseUser.getPhotoUrl())
+                .into(userprofile);
+
             if (mFirebaseUser.getPhotoUrl() != null) {
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
@@ -199,24 +220,13 @@ public class ForumActivity extends AppCompatActivity
         threadAdapter = new ThreadAdapter(this, threads);
         lv.setAdapter(threadAdapter);
 
-        final AppBarLayout app_bar= (AppBarLayout)findViewById(R.id.app_bar);
-        app_bar.addOnOffsetChangedListener(new   AppBarLayout.OnOffsetChangedListener() {
+        lv.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, final int verticalOffset) {
-                if(verticalOffset==-480){
-                    getSupportActionBar().setTitle(R.string.app_name);
-                }else{
-                    getSupportActionBar().setTitle(mDisplayname);
-                }
-                lv.setOnTouchListener(new View.OnTouchListener() {
-                    // Setting on Touch Listener for handling the touch inside ScrollView
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        // Disallow the touch request for parent scroll on touch of child view
-                        v.getParent().getParent().requestDisallowInterceptTouchEvent(verticalOffset == -480);
-                        return false;
-                    }
-                });
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
 
@@ -242,9 +252,7 @@ public class ForumActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         switch (item.getItemId()) {
             case R.id.nav_notification:
                 if(item.isChecked()) {

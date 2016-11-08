@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.herik21.forum.SignInActivity">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/sign_in"
+        android:layout_marginEnd="128dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="128dp"
+        android:id="@+id/textView5"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="32dp"
+        app:layout_constraintLeft_toRightOf="@+id/usericon"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintHorizontal_bias="0.8" />
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/twitter_login_button"
+        android:layout_width="211dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="48dp"
+        app:layout_constraintLeft_toRightOf="@+id/sign_in_google"
+        android:layout_marginLeft="48dp"
+        app:layout_constraintHorizontal_bias="0.44" />
+
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/usericon"
+        android:layout_marginStart="112dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="112dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_google"
+        android:layout_width="166dp"
+        android:layout_height="59dp"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="88dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="88dp" />
+
+</android.support.constraint.ConstraintLayout>
