@@ -7,23 +7,23 @@
         <item
             android:id="@+id/nav_notification"
             android:icon="@drawable/message_alert"
-            android:title="Greendit notifications"
+            android:title="@string/greendit_notifications"
             app:itemBackground="@android:color/white"
             android:checkable="true" />
         <item
             android:id="@+id/nav_editname"
             android:icon="@drawable/settings"
-            android:title="Edit display name"
+            android:title="@string/edit_dname"
             android:checkable="false" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/github_circle"
-            android:title="About"
+            android:title="@string/about"
             android:checkable="false" />
         <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/logout"
-            android:title="Sign out"
+            android:title="@string/sign_out"
             android:checkable="false" />
     </group>
 

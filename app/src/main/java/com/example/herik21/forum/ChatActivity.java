@@ -76,7 +76,11 @@ public class ChatActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic(mTitle.replace(" ","_"));
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(mTitle);
+        if(mTitle.equals("Main thread")) {
+            getSupportActionBar().setTitle(R.string.main_title);
+        }else{
+            getSupportActionBar().setTitle(mTitle);
+        }
         msg = (EditText)findViewById(R.id.content);
         Send = (ImageButton)findViewById(R.id.Send);
         //Toast.makeText(this,"thread id: "+mThreadID,Toast.LENGTH_SHORT).show();
@@ -229,9 +233,7 @@ public class ChatActivity extends AppCompatActivity {
         if (requestCode == PIC_REQUEST) {
             if (resultCode == RESULT_OK) {
                 try {
-                    if (data == null) {
-                        return;
-                    }else {
+                    if (data != null) {
                         Uri selectedImage = data.getData();
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap pic = BitmapFactory.decodeStream(imageStream);
@@ -327,11 +329,7 @@ public class ChatActivity extends AppCompatActivity {
                 wr.flush();
                 conn.getInputStream();
 
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;

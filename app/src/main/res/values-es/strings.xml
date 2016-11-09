@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Greendit</string>
+    <string name="edit_dname">Editar nombre de usuario</string>
+    <string name="sign_in">Iniciar Sessión</string>
+    <string name="welcome_msg">Bienvenido!</string>
+    <string name="thread_name">Nombre de la discusión</string>
+    <string name="description">Descripción</string>
+    <string name="create_thread">Crear Discusión</string>
+    <string name="add_user">Agregar usuario</string>
+    <string name="add">Agregar</string>
+    <string name="action_settings">Configuración</string>
+    <string name="conf_new_members">Confirmar nuevos miembros</string>
+    <string name="main_thread">Principal:</string>
+    <string name="threads_you_are_currently_in">Discusiones privadas:</string>
+    <string name="Greendit_Discussion">Discusión Greendit</string>
+    <string name="sign_out">Cerrar Sessión</string>
+    <string name="about">"Acerca de "</string>
+    <string name="greendit_notifications">Notificaciones Greendit</string>
+    <string name="main_title">Discusión Principal</string>
+    <string name="thread_title">Titulo</string>
+</resources>

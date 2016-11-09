@@ -19,7 +19,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="Threads you are currently in:"
+            android:text="@string/threads_you_are_currently_in"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/textView3"
@@ -47,7 +47,9 @@
                 android:id="@+id/imageView"
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
-                android:layout_width="wrap_content" />
+                android:layout_width="wrap_content"
+                android:contentDescription="profile"
+                tools:ignore="HardcodedText" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -65,7 +67,7 @@
                 android:layout_margin="0dp">
 
                 <TextView
-                    android:text="TextView"
+                    android:text="@string/Greendit_Discussion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/title"
@@ -75,18 +77,17 @@
                     android:textStyle="normal|bold" />
 
                 <TextView
-                    android:text="TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/desc"
                     android:layout_weight="1"
-                    tools:text="Description" />
+                    android:text="@string/description" />
 
             </LinearLayout>
         </LinearLayout>
 
         <TextView
-            android:text="Main Thread: "
+            android:text="@string/main_thread"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView4"

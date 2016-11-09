@@ -23,13 +23,13 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Thread name"
+            android:hint="@string/thread_name"
             android:id="@+id/newThread" />
 
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:text="Create Thread"
+        android:text="@string/create_thread"
         android:layout_width="200dp"
         android:layout_height="53dp"
         android:id="@+id/button2"
@@ -45,7 +45,7 @@
         android:backgroundTint="@color/colorAccent" />
 
     <Button
-        android:text="Add"
+        android:text="@string/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/addbutton"
@@ -77,7 +77,7 @@
             tools:layout_editor_absoluteX="22dp"
             android:id="@+id/newUser"
             android:layout_weight="1"
-            android:hint="Add user" />
+            android:hint="@string/add_user" />
 
         <!--EditText
             android:layout_width="235dp"
@@ -102,7 +102,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:hint="@string/description"
             android:id="@+id/description" />
     </android.support.design.widget.TextInputLayout>
 

@@ -212,10 +212,10 @@ public class ForumActivity extends AppCompatActivity
             }
         });
         try {
-            ((TextView) mainThreadView.findViewById(R.id.title)).setText("Greendit Discussion");
-            ((TextView) mainThreadView.findViewById(R.id.desc)).setText("Description");
+            ((TextView) mainThreadView.findViewById(R.id.title)).setText(R.string.Greendit_Discussion);
+            ((TextView) mainThreadView.findViewById(R.id.desc)).setText(R.string.description);
         }catch (Exception e){
-
+            Log.e("Error",e.getMessage());
         }
         threadAdapter = new ThreadAdapter(this, threads);
         lv.setAdapter(threadAdapter);
@@ -273,7 +273,7 @@ public class ForumActivity extends AppCompatActivity
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                        .setTitle("Edit Display Name")
+                        .setTitle(R.string.edit_dname)
                         .setView(input)
                         .setIcon(R.mipmap.ic_launcher)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {

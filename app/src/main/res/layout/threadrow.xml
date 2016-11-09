@@ -2,31 +2,29 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:cardCornerRadius="4dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="10dp"
-            >
-            <!--app:cardCornerRadius"2dp"-->
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thread Title"
+                android:text="@string/thread_title"
                 android:id="@+id/tvThreadtitle"
                 android:layout_weight="1"
                 android:textStyle="normal|bold"
@@ -35,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:text="@string/description"
                 android:id="@+id/tvThreadDescription"
                 android:layout_weight="1" />
         </LinearLayout>

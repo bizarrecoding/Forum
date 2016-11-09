@@ -15,16 +15,16 @@
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:text="@string/sign_in"
-        android:layout_marginEnd="128dp"
+        android:layout_marginEnd="72dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="128dp"
+        android:layout_marginRight="72dp"
         android:id="@+id/textView5"
         android:layout_marginTop="80dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="64dp"
         app:layout_constraintLeft_toRightOf="@+id/usericon"
-        android:layout_marginLeft="32dp"
-        app:layout_constraintHorizontal_bias="0.8" />
+        android:layout_marginLeft="64dp"
+        app:layout_constraintHorizontal_bias="0.75" />
 
     <com.twitter.sdk.android.core.identity.TwitterLoginButton
         android:id="@+id/twitter_login_button"
@@ -50,7 +50,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="112dp"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_google"
