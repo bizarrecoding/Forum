@@ -3,10 +3,12 @@ package com.example.herik21.forum;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -119,27 +121,30 @@ public class ChatActivity extends AppCompatActivity {
                 String src = newMessage.getContent();
                 if(src.length()>5 && src.substring(0,5).equals("$img/")){
                     try {
-                        String imgref = src.substring(5, src.length());
+                        final String imgref = src.substring(5, src.length());
                         Log.d("img",imgref);
                         StorageReference storageRef = FirebaseStorage.getInstance()
                                 .getReferenceFromUrl("gs://forum-1b336.appspot.com");
-                        storageRef.child(imgref).getDownloadUrl().addOnSuccessListener(new OnSuccessListener() {
+                        viewHolder.image.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onSuccess(Object o) {
-                                Uri url = (Uri)o;
-                                Glide.with(ChatActivity.this)
-                                        .load(url.toString())
-                                        .into(viewHolder.image);
+                            public void onClick(View view) {
+                                Intent i = new Intent(ChatActivity.this,ImageActivity.class);
+                                i.putExtra("image",imgref);
+                                startActivity(i);
                             }
                         });
+                        Drawable myIcon = getResources().getDrawable( R.drawable.message_alert );
+                        viewHolder.image.setImageDrawable(myIcon);
                         viewHolder.image.setVisibility(View.VISIBLE);
                         viewHolder.content.setVisibility(View.INVISIBLE);
-                        //viewHolder.image.setMinimumHeight(100);
                     }catch (Exception e){
                         Log.e("Error",e.getMessage()+"\n"+e.getCause().toString());
                     }
                 }else{
                     viewHolder.content.setText(newMessage.getContent());
+                    viewHolder.image.setVisibility(View.INVISIBLE);
+                    Drawable myIcon = getResources().getDrawable( R.drawable.message_alert );
+                    viewHolder.image.setImageDrawable(myIcon);
                 }
             }
         };
@@ -187,20 +192,6 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(msg.getText().toString().trim().length()>0 ){
-                    /*Message newMessage = new Message(
-                            mThreadID,
-                            msg.getText().toString(),
-                            mUsername,
-                            getNow(),
-                            mPhotoUrl);
-                    //messageTable;
-                    String key = messageTable.child("messages").push().getKey();
-                    messageTable.child("messages").child(key).setValue(newMessage);
-                    msg.setText("");
-
-                    FirebaseMessaging fm = FirebaseMessaging.getInstance();
-                    Log.d("FCM","about to send");
-                    new PostTask().execute();*/
                     sendToFirebase(msg.getText().toString());
                 }
             }

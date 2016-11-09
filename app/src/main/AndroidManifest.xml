@@ -54,7 +54,10 @@
             android:name="io.fabric.ApiKey"
             android:value="7521cab6b39df5d57294d2bbb4e816fff322df71" />
 
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".AboutActivity" />
+        <activity
+            android:name=".ImageActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -275,6 +275,7 @@ public class ForumActivity extends AppCompatActivity
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
                         .setTitle("Edit Display Name")
                         .setView(input)
+                        .setIcon(R.mipmap.ic_launcher)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
